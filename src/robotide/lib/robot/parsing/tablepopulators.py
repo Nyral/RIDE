@@ -137,6 +137,23 @@ class KeywordTablePopulator(_StepContainingTablePopulator):
     def _get_populator(self, row):
         return UserKeywordPopulator(self._table.add)
 
+class CommentTablePopulator(_StepContainingTablePopulator):
+
+    def _get_populator(self, row):
+        return CommentPopulator(self._table.add)
+
+class CommentPopulator(Populator):
+
+    def __init__(self, for_loop_creator):
+        self._populator = NullPopulator()
+
+    def add(self, row):
+        self._populator.populate()
+        self._populator.add(row)
+
+    def populate(self):
+        self._populator.populate()
+
 
 class ForLoopPopulator(Populator):
 

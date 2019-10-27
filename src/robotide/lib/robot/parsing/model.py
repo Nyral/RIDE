@@ -70,7 +70,7 @@ class _TestData(object):
                              (self._variable_table_names, self.variable_table),
                              (self._testcase_table_names, self.testcase_table),
                              (self._keyword_table_names, self.keyword_table),
-                             (self._comment_table_names, None)]:
+                             (self._comment_table_names, self.comment_table)]:
             for name in names:
                 yield name, table
 
@@ -172,6 +172,7 @@ class TestCaseFile(_TestData):
         self.variable_table = VariableTable(self)
         self.testcase_table = TestCaseTable(self)
         self.keyword_table = KeywordTable(self)
+        self.comment_table = CommentTable(self)
         _TestData.__init__(self, parent, source)
 
     def populate(self):
@@ -188,7 +189,8 @@ class TestCaseFile(_TestData):
 
     def __iter__(self):
         for table in [self.setting_table, self.variable_table,
-                      self.testcase_table, self.keyword_table]:
+                      self.testcase_table, self.keyword_table,
+                      self.comment_table]:
             yield table
 
     def __nonzero__(self):
@@ -207,6 +209,7 @@ class ResourceFile(_TestData):
         self.variable_table = VariableTable(self)
         self.testcase_table = TestCaseTable(self)
         self.keyword_table = KeywordTable(self)
+        self.comment_table = CommentTable(self)
         _TestData.__init__(self, source=source)
 
     def populate(self):
@@ -228,7 +231,8 @@ class ResourceFile(_TestData):
         return True
 
     def __iter__(self):
-        for table in [self.setting_table, self.variable_table, self.keyword_table]:
+        for table in [self.setting_table, self.variable_table,
+                      self.keyword_table, self.comment_table]:
             yield table
 
 
@@ -248,6 +252,7 @@ class TestDataDirectory(_TestData):
         self.variable_table = VariableTable(self)
         self.testcase_table = TestCaseTable(self)
         self.keyword_table = KeywordTable(self)
+        self.comment_table = CommentTable(self)
         _TestData.__init__(self, parent, source)
 
     def populate(self, include_suites=None, extensions=None, recurse=True):
@@ -276,7 +281,8 @@ class TestDataDirectory(_TestData):
         return any(ch.has_tests() for ch in self.children)
 
     def __iter__(self):
-        for table in [self.setting_table, self.variable_table, self.keyword_table]:
+        for table in [self.setting_table, self.variable_table,
+                      self.keyword_table, self.comment_table]:
             yield table
 
 
@@ -532,6 +538,21 @@ class KeywordTable(_Table):
 
     def __iter__(self):
         return iter(self.keywords)
+
+
+class CommentTable(_Table):
+    type = 'comment'
+
+    def __init__(self, parent):
+        _Table.__init__(self, parent)
+        self.comments = []
+
+    def add(self, name):
+        self.comments.append(name)
+        return self.comments[-1]
+
+    def __iter__(self):
+        return iter(self.comments)
 
 
 @py2to3

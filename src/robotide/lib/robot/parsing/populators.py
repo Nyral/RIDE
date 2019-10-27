@@ -23,7 +23,7 @@ from robotide.lib.robot.utils import get_error_message, unic
 from .datarow import DataRow
 from .tablepopulators import (SettingTablePopulator, VariableTablePopulator,
                               TestTablePopulator, KeywordTablePopulator,
-                              NullPopulator)
+                              CommentTablePopulator, NullPopulator)
 from .htmlreader import HtmlReader
 from .tsvreader import TsvReader
 from .robotreader import RobotReader
@@ -46,7 +46,8 @@ class FromFilePopulator(object):
     _populators = {'setting': SettingTablePopulator,
                    'variable': VariableTablePopulator,
                    'test case': TestTablePopulator,
-                   'keyword': KeywordTablePopulator}
+                   'keyword': KeywordTablePopulator,
+                   'comment': CommentTablePopulator}
 
     def __init__(self, datafile):
         self._datafile = datafile
